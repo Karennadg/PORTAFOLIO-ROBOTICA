@@ -1,4 +1,4 @@
-# 📚 Práctica 2: Control de LED NeoPixel con Arduino mediante comunicación Serial
+# 📚 Práctica 4: Lectura de Acelerómetro MPU6050 con Arduino
 
 ---
 
@@ -6,56 +6,58 @@
 
 - **Equipo / Autor(es):**  _Karen Najera y Arith Maldonado_
 - **Curso / Asignatura:** _Elementos programables II_  
-- **Fecha:** _20/08/2025_  
-- **Descripción breve:** _En esta práctica se implementa un programa en Arduino para controlar un LED NeoPixel a través de comandos enviados por el monitor serial. El usuario puede enviar instrucciones como “red”, “green” o “blue” y el LED cambiará su color de acuerdo al mensaje recibido. La librería Adafruit_NeoPixel permite el manejo de este tipo de LEDs direccionables de manera sencilla._
+- **Fecha:** _01/09/2025_  
+- **Descripción breve:** _En esta práctica se implementa un programa en Arduino para leer datos de un acelerómetro y giroscopio MPU6050 mediante comunicación I2C. El sistema recoge información de aceleración en tres ejes (X, Y, Z), velocidades angulares (giroscopio) y temperatura interna del sensor, mostrando los valores por el monitor serial._
 
-!!! tip "Consejo"
-    Mantén este resumen corto (máx. 5 líneas). Lo demás va en secciones específicas.
 
 ---
 
 ## 2) Objetivos
 
-- **General:** _Comprender el funcionamiento básico de un LED NeoPixel y su control mediante comunicación serial en Arduino._
+- **General:** _Comprender el funcionamiento básico del sensor MPU6050 y su lectura mediante la comunicación I2C en Arduino.._
 - **Específicos:**
-  - _Configurar el puerto serial para recibir datos desde el monitor de Arduino ID_
-  - _Implementar la librería Adafruit_NeoPixel para inicializar y controlar el LED._
-  - _Programar condiciones que permitan el cambio de color del LED en función del mensaje recibido._
+  - _nicializar correctamente el sensor MPU6050 utilizando la interfaz I2C._
+  - _Leer y convertir los datos de aceleración, temperatura y giroscopio_
+  - _Mostrar los valores en el monitor serial para su análisis y visualización._
 
 ## 3) Alcance y Exclusiones
 
-- **Incluye:** _El código desarrollado tiene como finalidad recibir comandos de texto a través del puerto serial y traducirlos en cambios de color en un LED NeoPixel._
+- **Incluye:** _a práctica se enfoca en la lectura y visualización de los datos del sensor MPU6050, el cual proporciona información útil de aceleración, temperatura y velocidad angular._
 
-Solo se controla un LED (NUMPIXELS = 1).
 
--_El usuario puede escribir “red”, “green” o “blue” en el monitor serial._
+-_Los datos se obtienen usando comunicación I2C a través de la librería Wire._
 
--_Cada mensaje recibido activa el LED con la intensidad y color definido._
+-_La salida de datos es continua y se presenta en el monitor serial cada segundo._
 
--_Se incorpora un retardo de 1 segundo para visualizar claramente cada cambio._
+-_No se utiliza ninguna librería externa específica para MPU6050, se accede directamente a los registros del sensor._
 
--_La lógica puede escalarse fácilmente para más LEDs o más colores.._
+-_Los valores obtenidos son procesados para mostrar aceleración en "g", temperatura en °C y giroscopio en °/s.
 
 ---
 
 ## 4) Resultados
 
- _Al realizar la práctica se comprobó que el sistema respondió de manera adecuada a los comandos enviados desde el monitor serial. Cada vez que se ingresó la palabra “red”, el LED NeoPixel se iluminó en color rojo con la intensidad programada; al escribir “green”, el LED cambió correctamente a color verde; y al introducir “blue”, se encendió en color azul._
+ _lAl ejecutar el programa, el sistema realizó correctamente la lectura de los datos proporcionados por el MPU6050. Se pudo observar cómo los valores de aceleración en X, Y y Z cambiaban al mover el sensor, lo que demostró su correcto funcionamiento. Igualmente, los datos del giroscopio respondieron a los movimientos angulares del dispositivo._
+
+ _La temperatura interna del sensor fue mostrada en grados Celsius, siendo útil para validar que el sensor esté operando correctamente._
+
 **Código**
-_El retardo de un segundo facilitó la observación de cada cambio de color antes de recibir un nuevo comando, lo que permitió validar visualmente el funcionamiento del programa. Además, se constató que el uso del carácter coma (,) como delimitador en la lectura de cadenas evitó errores de interpretación en los mensajes._
+El programa utiliza la librería Wire.h para establecer la comunicación I2C entre el Arduino y el sensor MPU6050. Esta comunicación requiere una dirección del dispositivo, en este caso 0x69, que corresponde al sensor. Cada tipo de dato (aceleración, giroscopio, temperatura) se encuentra en una posición específica de memoria interna del sensor, llamada registro. El programa accede a esos registros para leer la información._
+
+
 <img src="recursos/imgs/P2.png" alt="..." width="100px">
 
-_En general, el comportamiento del LED fue estable, sin presentar fallos de comunicación ni bloqueos durante las pruebas, lo cual confirma la correcta implementación de la librería y de la lógica de control._
+_Primero, en el setup(), se inicializa la comunicación I2C (Wire.begin()) y el monitor serial (Serial.begin(115200)). Luego, se despierta el sensor escribiendo 0x00 en el registro de encendido 0x6B.El programa Lee la aceleración, luego la temperatura y por ultimo la velocidad del giroscopio, ajustando la escala a cada dato.
 
 **Conocimientos previos**
-- _Programación básica en X_
-- _Electrónica básica_
-- _Git/GitHub_
+- _Manejo de comunicación I2C_
+- _Programación en Arduino (lectura de registros)
+- _Conversión de datos binarios a valores físicos (escalado)
 
 ---
 
 ## 5) Conclusión
-_Con esta práctica se demostró el uso básico de la librería Adafruit_NeoPixel para controlar LEDs direccionables mediante comunicación serial. El programa permite al usuario interactuar directamente con el hardware enviando comandos simples desde el monitor serial, logrando así un cambio de color en el LED. Esta lógica se puede ampliar a tiras LED más grandes y a una gama más amplia de colores, lo cual representa una aplicación fundamental en proyectos de iluminación decorativa, robótica y señalización._
+_Esta práctica permitió poner en funcionamiento un sensor MPU6050 sin el uso de librerías externas específicas, lo cual facilita una comprensión más profunda del protocolo de comunicación I2C y de la estructura de datos del sensor. La obtención de valores crudos y su posterior escalado muestran cómo se puede traducir información binaria en datos físicos útiles.Los conocimientos adquiridos pueden aplicarse en proyectos que involucren navegación, robótica, drones, estabilizadores, entre otros. La práctica también sienta las bases para integrar múltiples sensores y realizar análisis de movimiento más avanzados.
 
 ## 6) Archivos Adjuntos
 

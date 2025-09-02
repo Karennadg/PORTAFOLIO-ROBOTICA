@@ -4,7 +4,7 @@
 Introducción a la mecátronica
 Departamento de Ciencias e Ingenierías | Universidad Iberoamericana Puebla, México.
 
-![Diagrama del sistema](recursos/imgs/ibero.jpeg)
+![Diagrama del sistema](recursos/imgs/ibero1.jpg)
 
 ---
 

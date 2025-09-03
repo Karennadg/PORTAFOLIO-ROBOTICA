@@ -1,67 +1,74 @@
-# 📚 Práctica 4: Lectura de Acelerómetro MPU6050 con Arduino
+# 📚 Práctica 4: Comunicación Serial con ESP32-C6 en Arduino  
 
 ---
 
 ## 1) Resumen
 
-- **Equipo / Autor(es):**  _Karen Najera y Arith Maldonado_
+- **Equipo / Autor(es):**  _Karen Nájera y Arith Maldonado_  
 - **Curso / Asignatura:** _Elementos programables II_  
-- **Fecha:** _01/09/2025_  
-- **Descripción breve:** _En esta práctica se implementa un programa en Arduino para leer datos de un acelerómetro y giroscopio MPU6050 mediante comunicación I2C. El sistema recoge información de aceleración en tres ejes (X, Y, Z), velocidades angulares (giroscopio) y temperatura interna del sensor, mostrando los valores por el monitor serial._
-
+- **Fecha:** _18/09/2025_  
+- **Descripción breve:**  
+  En esta práctica se implementó un código en **Arduino IDE** para establecer comunicación serial con un **ESP32-C6**. Se explicó el funcionamiento de los diferentes tipos de variables (`int`, `char`, `string`, `float`, `bool`) y la cantidad de datos que puede almacenar cada uno. Además, se analizaron las diferencias entre los dos puertos de comunicación del ESP32 (UART y USB nativo) y cómo este recibe mensajes enviados desde el monitor serial.
 
 ---
 
 ## 2) Objetivos
 
-- **General:** _Comprender el funcionamiento básico del sensor MPU6050 y su lectura mediante la comunicación I2C en Arduino.._
-- **Específicos:**
-  - _nicializar correctamente el sensor MPU6050 utilizando la interfaz I2C._
-  - _Leer y convertir los datos de aceleración, temperatura y giroscopio_
-  - _Mostrar los valores en el monitor serial para su análisis y visualización._
+- **General:**  
+  _Comprender el funcionamiento básico de la comunicación serial en el ESP32-C6 usando Arduino IDE._  
+
+- **Específicos:**  
+  - Identificar y diferenciar los principales tipos de variables en Arduino.  
+  - Implementar un programa que permita recibir y mostrar mensajes en el monitor serial.  
+  - Analizar la diferencia entre el puerto **UART (serial clásico)** y el puerto **USB nativo** del ESP32.  
+  - Verificar la correcta recepción y envío de caracteres mediante pruebas prácticas.  
+
+---
 
 ## 3) Alcance y Exclusiones
 
-- **Incluye:** _a práctica se enfoca en la lectura y visualización de los datos del sensor MPU6050, el cual proporciona información útil de aceleración, temperatura y velocidad angular._
+- **Incluye:**  
+  - Uso del ESP32-C6 como dispositivo de comunicación serial.  
+  - Configuración del baud rate en el monitor serial.  
+  - Recepción y envío de mensajes en el IDE de Arduino.  
+  - Explicación teórica de los tipos de variables y su uso en la práctica.  
 
-
--_Los datos se obtienen usando comunicación I2C a través de la librería Wire._
-
--_La salida de datos es continua y se presenta en el monitor serial cada segundo._
-
--_No se utiliza ninguna librería externa específica para MPU6050, se accede directamente a los registros del sensor._
-
--_Los valores obtenidos son procesados para mostrar aceleración en "g", temperatura en °C y giroscopio en °/s.
+- **No incluye:**  
+  - Conexión a sensores externos.  
+  - Programación de librerías adicionales.  
+  - Uso de comunicación inalámbrica (Wi-Fi / Bluetooth).  
 
 ---
 
 ## 4) Resultados
 
- _lAl ejecutar el programa, el sistema realizó correctamente la lectura de los datos proporcionados por el MPU6050. Se pudo observar cómo los valores de aceleración en X, Y y Z cambiaban al mover el sensor, lo que demostró su correcto funcionamiento. Igualmente, los datos del giroscopio respondieron a los movimientos angulares del dispositivo._
+Durante la práctica se logró:  
 
- _La temperatura interna del sensor fue mostrada en grados Celsius, siendo útil para validar que el sensor esté operando correctamente._
-
-**Código**
-El programa utiliza la librería Wire.h para establecer la comunicación I2C entre el Arduino y el sensor MPU6050. Esta comunicación requiere una dirección del dispositivo, en este caso 0x69, que corresponde al sensor. Cada tipo de dato (aceleración, giroscopio, temperatura) se encuentra en una posición específica de memoria interna del sensor, llamada registro. El programa accede a esos registros para leer la información._
-
-
-<img src="recursos/imgs/P2.png" alt="..." width="100px">
-
-_Primero, en el setup(), se inicializa la comunicación I2C (Wire.begin()) y el monitor serial (Serial.begin(115200)). Luego, se despierta el sensor escribiendo 0x00 en el registro de encendido 0x6B.El programa Lee la aceleración, luego la temperatura y por ultimo la velocidad del giroscopio, ajustando la escala a cada dato.
-
-**Conocimientos previos**
-- _Manejo de comunicación I2C_
-- _Programación en Arduino (lectura de registros)
-- _Conversión de datos binarios a valores físicos (escalado)
+- **Recepción de datos seriales:** El ESP32-C6 recibió correctamente mensajes enviados desde el monitor serial, aunque en un inicio aparecieron caracteres extraños debido a un **baud rate incorrecto**. Ajustando la velocidad a **38400 baudios** se solucionó el problema.  
+- **Tipos de datos:**  
+  - `int` → números enteros (16 bits).  
+  - `char` → un carácter (1 byte).  
+  - `string` → cadena de caracteres (mínimo 16 bits, máximo variable).  
+  - `float` → números con decimales (32 bits).  
+  - `bool` → valores lógicos (1 bit).  
+- **Puertos de comunicación:**  
+  - **UART (Universal Asynchronous Receiver-Transmitter):** puerto serial tradicional, útil para depuración o conexión con otros dispositivos.  
+  - **USB nativo:** permite programar directamente el microcontrolador y también enviar datos sin necesidad de un conversor externo.  
 
 ---
 
-## 5) Conclusión
-_Esta práctica permitió poner en funcionamiento un sensor MPU6050 sin el uso de librerías externas específicas, lo cual facilita una comprensión más profunda del protocolo de comunicación I2C y de la estructura de datos del sensor. La obtención de valores crudos y su posterior escalado muestran cómo se puede traducir información binaria en datos físicos útiles.Los conocimientos adquiridos pueden aplicarse en proyectos que involucren navegación, robótica, drones, estabilizadores, entre otros. La práctica también sienta las bases para integrar múltiples sensores y realizar análisis de movimiento más avanzados.
+**Código Implementado**
 
-## 6) Archivos Adjuntos
+```cpp
+char msg;
 
+void setup() {
+  Serial.begin(38400);   // Inicializa comunicación serial
+}
 
-
-
-```
+void loop() {
+  if (Serial.available()) {   // Verifica si hay datos
+    msg = Serial.read();      // Lee el carácter
+    Serial.print(msg);        // Lo reenvía al monitor
+  }
+}

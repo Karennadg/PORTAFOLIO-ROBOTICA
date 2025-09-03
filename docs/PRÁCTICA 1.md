@@ -1,4 +1,4 @@
-# 📚 Práctica 4: Comunicación Serial con ESP32-C6 en Arduino  
+# 📚 Práctica 1: Comunicación Serial con ESP32-C6 en Arduino  
 
 ---
 

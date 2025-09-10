@@ -57,8 +57,7 @@ _Al ejecutar el programa cargado en el Arduino, se pudo observar que la lectura 
 
 _El programa utiliza la librería Wire.h para establecer la comunicación I2C entre el Arduino y el sensor MPU6050. Esta comunicación requiere una dirección del dispositivo, en este caso 0x69, que corresponde al sensor. Cada tipo de dato (aceleración, giroscopio, temperatura) se encuentra en una posición específica de memoria interna del sensor, llamada registro. El programa accede a esos registros para leer la información.Primero, en el setup(), se inicializa la comunicación I2C (Wire.begin()) y el monitor serial (Serial.begin(115200)). Luego, se despierta el sensor escribiendo 0x00 en el registro de encendido 0x6B.El programa Lee la aceleración, luego la temperatura y por ultimo la velocidad del giroscopio, ajustando la escala a cada dato._
 
-
-<img src="recursos/imgs/P4.png" alt="..." width="400px"
+<img src="recursos/imgs/P4.png" alt="..." width="400px">
 
 _En resumen, la práctica permitió obtener con éxito los tres tipos de datos proporcionados por el sensor: aceleración, velocidad angular y temperatura, validando tanto la lectura directa de registros como el procesamiento correcto de los datos. Además, se verificó la importancia de interpretar los datos como enteros con signo y de seguir la documentación oficial (datasheet) para aplicar correctamente las fórmulas y las direcciones de memoria._
 

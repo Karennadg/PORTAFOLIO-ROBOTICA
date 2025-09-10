@@ -43,7 +43,12 @@ Solo se controla un LED (NUMPIXELS = 1).
  _Al realizar la práctica se comprobó que el sistema respondió de manera adecuada a los comandos enviados desde el monitor serial. Cada vez que se ingresó la palabra “red”, el LED NeoPixel se iluminó en color rojo con la intensidad programada; al escribir “green”, el LED cambió correctamente a color verde; y al introducir “blue”, se encendió en color azul._
 **Código**
 _El retardo de un segundo facilitó la observación de cada cambio de color antes de recibir un nuevo comando, lo que permitió validar visualmente el funcionamiento del programa. Además, se constató que el uso del carácter coma (,) como delimitador en la lectura de cadenas evitó errores de interpretación en los mensajes._
-<img src="recursos/imgs/P2.png" alt="..." width="100px">
+
+
+
+
+<img src="recursos/imgs/P2.png" alt="..." width="400px">
+
 
 _En general, el comportamiento del LED fue estable, sin presentar fallos de comunicación ni bloqueos durante las pruebas, lo cual confirma la correcta implementación de la librería y de la lógica de control._
 
@@ -54,12 +59,69 @@ _En general, el comportamiento del LED fue estable, sin presentar fallos de comu
 
 ---
 
+## 6) Código
+```Python
+// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
+// Released under the GPLv3 license to match the rest of the
+// Adafruit NeoPixel library
+ 
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+ #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
+#endif
+ 
+// Which pin on the Arduino is connected to the NeoPixels?
+#define PIN 8    // On Trinket or Gemma, suggest changing this to 1
+ 
+// How many NeoPixels are attached to the Arduino?
+#define NUMPIXELS 1 // Popular NeoPixel ring size
+ 
+// When setting up the NeoPixel library, we tell it how many pixels,
+// and which pin to use to send signals. Note that for older NeoPixel
+// strips you might need to change the third parameter -- see the
+// strandtest example for more information on possible values.
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+ 
+#define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
+ 
+String msj="";
+ 
+void setup() {
+   Serial.begin(115200);//Inicia Serial a 115200 bauds o 115200 char/s
+  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
+}
+ 
+void loop() {
+ 
+   if(Serial.available()>0){ //Entrar al if solo si se recibe algo por el serial
+    msj = Serial.readStringUntil(',');//Ciclo hasta leer el char marcado
+    Serial.println(msj); //Imprime el comando recibido
+  }
+ 
+  if(msj=="red")
+  {
+    pixels.clear(); // Set all pixel colors to 'off'
+    pixels.setPixelColor(0, pixels.Color(150, 0, 0));
+    pixels.show();   // Send the updated pixel colors to the hardware.
+    delay (1000);
+  }
+ 
+  else if(msj=="green"){
+    pixels.clear(); // Set all pixel colors to 'off'
+    pixels.setPixelColor(0, pixels.Color(0, 150, 0));
+    pixels.show();
+    delay (1000);
+  }
+  else if(msj=="blue"){
+    pixels.clear(); // Set all pixel colors to 'off'
+    pixels.setPixelColor(0, pixels.Color(0, 0, 150));
+    pixels.show();
+    delay (1000);
+  }
+   
+ 
+   
+}
+```
 ## 5) Conclusión
 _Con esta práctica se demostró el uso básico de la librería Adafruit_NeoPixel para controlar LEDs direccionables mediante comunicación serial. El programa permite al usuario interactuar directamente con el hardware enviando comandos simples desde el monitor serial, logrando así un cambio de color en el LED. Esta lógica se puede ampliar a tiras LED más grandes y a una gama más amplia de colores, lo cual representa una aplicación fundamental en proyectos de iluminación decorativa, robótica y señalización._
-
-## 6) Archivos Adjuntos
-
-
-
-
-```

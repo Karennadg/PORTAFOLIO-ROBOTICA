@@ -44,7 +44,6 @@
 
 ## 4) Resultados
 _Para esta práctica, se consultó la hoja de datos del MPU6050, donde se especifican las direcciones de los registros internos. Cada tipo de dato se encuentra en registros consecutivos:_
-``` codigo
 
 
 | Tipo de Dato | Dirección Base | Bytes leídos | Descripción                    |
@@ -54,7 +53,6 @@ _Para esta práctica, se consultó la hoja de datos del MPU6050, donde se especi
 | Giroscopio   | `0x43`         | 6 bytes      | X (2), Y (2), Z (2)            |
 
 
-```
 _Al ejecutar el programa cargado en el Arduino, se pudo observar que la lectura de datos del sensor MPU6050 se realizó de manera satisfactoria. Los valores de aceleración en los ejes X, Y y Z respondieron correctamente al mover físicamente el sensor, mostrando cambios en tiempo real en el monitor serial. Esto confirmó que la configuración de los registros internos del sensor y la escala aplicada a los datos fue adecuada, permitiendo representar la aceleración en unidades de "g"._
 
 _El programa utiliza la librería Wire.h para establecer la comunicación I2C entre el Arduino y el sensor MPU6050. Esta comunicación requiere una dirección del dispositivo, en este caso 0x69, que corresponde al sensor. Cada tipo de dato (aceleración, giroscopio, temperatura) se encuentra en una posición específica de memoria interna del sensor, llamada registro. El programa accede a esos registros para leer la información.Primero, en el setup(), se inicializa la comunicación I2C (Wire.begin()) y el monitor serial (Serial.begin(115200)). Luego, se despierta el sensor escribiendo 0x00 en el registro de encendido 0x6B.El programa Lee la aceleración, luego la temperatura y por ultimo la velocidad del giroscopio, ajustando la escala a cada dato._

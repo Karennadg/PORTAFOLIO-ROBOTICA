@@ -1,4 +1,4 @@
-# 📚 Práctica 1: Comunicación Serial con ESP32-C6 en Arduino  
+# 📚 Práctica 3: Comunicación Serial con ESP32-C6 en Arduino
 
 ---
 
@@ -8,35 +8,34 @@
 - **Curso / Asignatura:** _Elementos programables II_  
 - **Fecha:** _18/09/2025_  
 - **Descripción breve:**  
-  En esta práctica se implementó un código en **Arduino IDE** para establecer comunicación serial con un **ESP32-C6**. Se explicó el funcionamiento de los diferentes tipos de variables (`int`, `char`, `string`, `float`, `bool`) y la cantidad de datos que puede almacenar cada uno. Además, se analizaron las diferencias entre los dos puertos de comunicación del ESP32 (UART y USB nativo) y cómo este recibe mensajes enviados desde el monitor serial.
+  En esta práctica se implementó un código en **Arduino IDE** para controlar un **NeoPixel** desde un **ESP32-C6** mediante comandos enviados por **Serial** con el formato `R<r>,G<g>,B<b>`, donde cada valor está en el rango **0–255**. Se repasaron los tipos de variables y se compararon los puertos **UART** y **USB nativo** del ESP32.
 
 ---
 
 ## 2) Objetivos
 
 - **General:**  
-  _Comprender el funcionamiento básico de la comunicación serial en el ESP32-C6 usando Arduino IDE._  
+  _Comprender el funcionamiento de la comunicación serial en el ESP32-C6 para el control de un LED RGB (NeoPixel) usando comandos `R,G,B`._
 
 - **Específicos:**  
-  - Identificar y diferenciar los principales tipos de variables en Arduino.  
-  - Implementar un programa que permita recibir y mostrar mensajes en el monitor serial.  
-  - Analizar la diferencia entre el puerto **UART (serial clásico)** y el puerto **USB nativo** del ESP32.  
-  - Verificar la correcta recepción y envío de caracteres mediante pruebas prácticas.  
+  - Identificar los principales tipos de variables usados en Arduino.  
+  - Implementar un programa que reciba un comando por Serial y aplique un color al NeoPixel.  
+  - Diferenciar el puerto **UART** y el **USB nativo** del ESP32-C6.  
+  - Verificar la correcta decodificación de comandos y la actualización del color.
 
 ---
 
 ## 3) Alcance y Exclusiones
 
 - **Incluye:**  
-  - Uso del ESP32-C6 como dispositivo de comunicación serial.  
-  - Configuración del baud rate en el monitor serial.  
-  - Recepción y envío de mensajes en el IDE de Arduino.  
-  - Explicación teórica de los tipos de variables y su uso en la práctica.  
+  - Uso del ESP32-C6 como dispositivo receptor de comandos seriales.  
+  - Configuración del **baud rate** y pruebas con el **Monitor Serial**.  
+  - Control de un **NeoPixel** (1 LED) con comandos `R,G,B`.
 
 - **No incluye:**  
   - Conexión a sensores externos.  
-  - Programación de librerías adicionales.  
-  - Uso de comunicación inalámbrica (Wi-Fi / Bluetooth).  
+  - Programación de librerías adicionales fuera de **Adafruit NeoPixel**.  
+  - Uso de Wi-Fi / Bluetooth.
 
 ---
 
@@ -44,31 +43,53 @@
 
 Durante la práctica se logró:  
 
-- **Recepción de datos seriales:** El ESP32-C6 recibió correctamente mensajes enviados desde el monitor serial, aunque en un inicio aparecieron caracteres extraños debido a un **baud rate incorrecto**. Ajustando la velocidad a **38400 baudios** se solucionó el problema.  
-- **Tipos de datos:**  
-  - `int` → números enteros (16 bits).  
-  - `char` → un carácter (1 byte).  
-  - `string` → cadena de caracteres (mínimo 16 bits, máximo variable).  
-  - `float` → números con decimales (32 bits).  
-  - `bool` → valores lógicos (1 bit).  
-- **Puertos de comunicación:**  
-  - **UART (Universal Asynchronous Receiver-Transmitter):** puerto serial tradicional, útil para depuración o conexión con otros dispositivos.  
-  - **USB nativo:** permite programar directamente el microcontrolador y también enviar datos sin necesidad de un conversor externo.  
+- **Recepción de comandos seriales** en formato `R<r>,G<g>,B<b>` y aplicación inmediata del color al NeoPixel.  
+- **Velocidad serial efectiva:** **115200 baudios** (el Monitor Serial y `Serial.begin` deben coincidir).  
+- **Validación de rangos:** cada canal se limita a `0–255` usando `constrain(...)`.  
+- **Ejemplos probados:** `R120,G110,B10`, `R255,G0,B0`, `R0,G0,B255`.
 
 ---
 
 **Código Implementado**
 
 ```cpp
-char msg;
-
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+ 
+#define PIN 8
+#define NUMPIXELS 1
+ 
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+ 
+String cmd = "";
+int r = 0, g = 0, b = 0;
+ 
 void setup() {
-  Serial.begin(38400);   // Inicializa comunicación serial
+  Serial.begin(115200);
+  pixels.begin();
 }
-
+ 
 void loop() {
-  if (Serial.available()) {   // Verifica si hay datos
-    msg = Serial.read();      // Lee el carácter
-    Serial.print(msg);        // Lo reenvía al monitor
+  if (Serial.available() > 0) {
+    cmd = Serial.readStringUntil('\n');
+    Serial.println("Msj recibido: " + cmd);
+
+    int pos1 = cmd.indexOf(',');      
+    int pos2 = cmd.indexOf(',', pos1 + 1);
+
+    String rPart = cmd.substring(0, pos1);                
+    String gPart = cmd.substring(pos1 + 1, pos2);        
+    String bPart = cmd.substring(pos2 + 1);              
+
+    // Extrae el número después de la letra (R/G/B)
+    r = constrain(rPart.substring(1).toInt(), 0, 255);
+    g = constrain(gPart.substring(1).toInt(), 0, 255);
+    b = constrain(bPart.substring(1).toInt(), 0, 255);
+ 
+    pixels.clear();
+    pixels.setPixelColor(0, pixels.Color(r, g, b));
+    pixels.show();
   }
 }

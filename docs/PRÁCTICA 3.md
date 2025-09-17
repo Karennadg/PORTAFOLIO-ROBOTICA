@@ -1,56 +1,71 @@
-# 📚 Práctica 3: Comunicación Serial con ESP32-C6 en Arduino
+# 📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE)
 
 ---
 
 ## 1) Resumen
 
-- **Equipo / Autor(es):**  _Karen Nájera y Arith Maldonado_  
+- **Equipo / Autor(es):** _Karen Nájera y Arith Maldonado_  
 - **Curso / Asignatura:** _Elementos programables II_  
 - **Fecha:** _18/09/2025_  
 - **Descripción breve:**  
-  En esta práctica se implementó un código en **Arduino IDE** para controlar un **NeoPixel** desde un **ESP32-C6** mediante comandos enviados por **Serial** con el formato `R<r>,G<g>,B<b>`, donde cada valor está en el rango **0–255**. Se repasaron los tipos de variables y se compararon los puertos **UART** y **USB nativo** del ESP32.
+  En esta práctica se implementó un programa en **Arduino IDE** para controlar un **NeoPixel** conectado a un **ESP32-C6** recibiendo comandos por **Serial** en el formato `R<r>,G<g>,B<b>` (0–255). Se reforzó el manejo de tipos de variables, el uso de la librería **Adafruit_NeoPixel** y la diferencia práctica entre **UART** y **USB nativo**.
+
+> **Tip:** Mantén este resumen corto (máx. 5 líneas). Lo demás va en secciones específicas.
 
 ---
 
 ## 2) Objetivos
 
 - **General:**  
-  _Comprender el funcionamiento de la comunicación serial en el ESP32-C6 para el control de un LED RGB (NeoPixel) usando comandos `R,G,B`._
+  _Comprender y aplicar la comunicación serial en el ESP32-C6 para controlar un LED NeoPixel mediante comandos `R,G,B`._
 
 - **Específicos:**  
-  - Identificar los principales tipos de variables usados en Arduino.  
-  - Implementar un programa que reciba un comando por Serial y aplique un color al NeoPixel.  
-  - Diferenciar el puerto **UART** y el **USB nativo** del ESP32-C6.  
-  - Verificar la correcta decodificación de comandos y la actualización del color.
+  - Configurar el puerto **Serial** y verificar su velocidad.  
+  - Parsear un comando de texto con tres canales (R, G, B).  
+  - Limitar cada canal al rango válido **0–255** y actualizar el color del NeoPixel.  
+  - Comparar el uso de **USB nativo** frente a **UART** para depuración y pruebas.
 
 ---
 
 ## 3) Alcance y Exclusiones
 
 - **Incluye:**  
-  - Uso del ESP32-C6 como dispositivo receptor de comandos seriales.  
-  - Configuración del **baud rate** y pruebas con el **Monitor Serial**.  
-  - Control de un **NeoPixel** (1 LED) con comandos `R,G,B`.
+  - Control de **1** LED NeoPixel (`NUMPIXELS = 1`).  
+  - Recepción de comandos por **Monitor Serial** (`R<r>,G<g>,B<b>`).  
+  - Ajuste de **baud rate** y verificación de eco.
 
 - **No incluye:**  
   - Conexión a sensores externos.  
-  - Programación de librerías adicionales fuera de **Adafruit NeoPixel**.  
-  - Uso de Wi-Fi / Bluetooth.
+  - Uso de Wi-Fi / Bluetooth.  
+  - Efectos avanzados o animaciones en tiras LED.
 
 ---
 
 ## 4) Resultados
 
-Durante la práctica se logró:  
-
-- **Recepción de comandos seriales** en formato `R<r>,G<g>,B<b>` y aplicación inmediata del color al NeoPixel.  
-- **Velocidad serial efectiva:** **115200 baudios** (el Monitor Serial y `Serial.begin` deben coincidir).  
-- **Validación de rangos:** cada canal se limita a `0–255` usando `constrain(...)`.  
+- **Recepción de comandos seriales** y aplicación inmediata del color en el NeoPixel.  
+- **Velocidad usada:** **115200 baudios** (coincidente entre `Serial.begin` y Monitor Serial).  
+- **Validación de entrada:** cada canal se restringe con `constrain(...)` a **0–255**.  
 - **Ejemplos probados:** `R120,G110,B10`, `R255,G0,B0`, `R0,G0,B255`.
 
 ---
 
-**Código Implementado**
+## 5) Protocolo de comandos y pruebas
+
+- **Formato:** `R<r>,G<g>,B<b>`  
+- **Rango:** `0–255` por canal.  
+- **Delimitación:** valores separados por **coma** y finalizados con **Enter** (`\n`).  
+
+**Pruebas sugeridas**
+- `R255,G0,B0` (rojo)  
+- `R0,G255,B0` (verde)  
+- `R0,G0,B255` (azul)  
+- `R255,G191,B0` (ámbar)  
+- `R10,G10,B10` (atenuado)
+
+---
+
+## 6) Código Implementado
 
 ```cpp
 #include <Adafruit_NeoPixel.h>
@@ -75,15 +90,15 @@ void loop() {
   if (Serial.available() > 0) {
     cmd = Serial.readStringUntil('\n');
     Serial.println("Msj recibido: " + cmd);
-
+ 
     int pos1 = cmd.indexOf(',');      
     int pos2 = cmd.indexOf(',', pos1 + 1);
-
+ 
     String rPart = cmd.substring(0, pos1);                
     String gPart = cmd.substring(pos1 + 1, pos2);        
     String bPart = cmd.substring(pos2 + 1);              
 
-    // Extrae el número después de la letra (R/G/B)
+    // Extrae el número después de la letra (R/G/B) y limita a 0-255
     r = constrain(rPart.substring(1).toInt(), 0, 255);
     g = constrain(gPart.substring(1).toInt(), 0, 255);
     b = constrain(bPart.substring(1).toInt(), 0, 255);
@@ -93,3 +108,4 @@ void loop() {
     pixels.show();
   }
 }
+

@@ -66,7 +66,7 @@ _En resumen, la práctica permitió obtener con éxito los tres tipos de datos p
 
 ## 6) Archivos Adjuntos
 
-```Python
+```CPP
 #include <Wire.h>
 #include <iostream>
 #include <sstream>

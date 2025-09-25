@@ -1,0 +1,832 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../PR%C3%81CTICA%202/">
+      
+      
+        <link rel="next" href="../PR%C3%81CTICA%204/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+    
+    
+      
+        <title>📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE) - PORTAFOLIO ELEMENTOS II</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.e53b48f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css">
+    
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#practica-3-control-de-led-neopixel-por-comandos-rgb-esp32-c6-arduino-ide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="PORTAFOLIO ELEMENTOS II" class="md-header__button md-logo" aria-label="PORTAFOLIO ELEMENTOS II" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PORTAFOLIO ELEMENTOS II
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="PORTAFOLIO ELEMENTOS II" class="md-nav__button md-logo" aria-label="PORTAFOLIO ELEMENTOS II" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PORTAFOLIO ELEMENTOS II
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Documentación Elementos Programables II
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PR%C3%81CTICA%201/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 1: Comunicación Serial con ESP32-C6 en Arduino
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PR%C3%81CTICA%202/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 2: Control de LED NeoPixel con Arduino mediante comunicación Serial.
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE)
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE)
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Resumen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Objetivos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-alcance-y-exclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Alcance y Exclusiones
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      4) Resultados
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-protocolo-de-comandos-y-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      5) Protocolo de comandos y pruebas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-codigo-implementado" class="md-nav__link">
+    <span class="md-ellipsis">
+      6) Código Implementado
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PR%C3%81CTICA%204/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 4: Lectura de Acelerómetro MPU6050 con Arduino
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PR%C3%81CTICA%205/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 5: ESP32-C6 como Beacon (BLE Advertising)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PR%C3%81CTICA%207/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 7: Control de LEDs con ESP32 mediante Servidor Web
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../comandos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Encabezados
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gitcmds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    🚀 Comandos básicos de Git (primeros pasos)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Recursos
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Recursos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../recursos/PR%C3%81CTICA%203/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    📚 Práctica 1: Comunicación Serial con ESP32-C6 en Arduino
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      1) Resumen
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      2) Objetivos
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-alcance-y-exclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      3) Alcance y Exclusiones
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-resultados" class="md-nav__link">
+    <span class="md-ellipsis">
+      4) Resultados
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-protocolo-de-comandos-y-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      5) Protocolo de comandos y pruebas
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-codigo-implementado" class="md-nav__link">
+    <span class="md-ellipsis">
+      6) Código Implementado
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="practica-3-control-de-led-neopixel-por-comandos-rgb-esp32-c6-arduino-ide">📚 Práctica 3: Control de LED NeoPixel por comandos R,G,B (ESP32-C6 + Arduino IDE)</h1>
+<hr />
+<h2 id="1-resumen">1) Resumen</h2>
+<ul>
+<li><strong>Equipo / Autor(es):</strong> <em>Karen Nájera y Arith Maldonado</em>  </li>
+<li><strong>Curso / Asignatura:</strong> <em>Elementos programables II</em>  </li>
+<li><strong>Fecha:</strong> <em>18/09/2025</em>  </li>
+<li><strong>Descripción breve:</strong><br />
+  En esta práctica se implementó un programa en <strong>Arduino IDE</strong> para controlar un <strong>NeoPixel</strong> conectado a un <strong>ESP32-C6</strong> recibiendo comandos por <strong>Serial</strong> en el formato <code>R&lt;r&gt;,G&lt;g&gt;,B&lt;b&gt;</code> (0–255). Se reforzó el manejo de tipos de variables, el uso de la librería <strong>Adafruit_NeoPixel</strong> y la diferencia práctica entre <strong>UART</strong> y <strong>USB nativo</strong>.</li>
+</ul>
+<blockquote>
+<p><strong>Tip:</strong> Mantén este resumen corto (máx. 5 líneas). Lo demás va en secciones específicas.</p>
+</blockquote>
+<hr />
+<h2 id="2-objetivos">2) Objetivos</h2>
+<ul>
+<li>
+<p><strong>General:</strong><br />
+<em>Comprender y aplicar la comunicación serial en el ESP32-C6 para controlar un LED NeoPixel mediante comandos <code>R,G,B</code>.</em></p>
+</li>
+<li>
+<p><strong>Específicos:</strong>  </p>
+</li>
+<li>Configurar el puerto <strong>Serial</strong> y verificar su velocidad.  </li>
+<li>Parsear un comando de texto con tres canales (R, G, B).  </li>
+<li>Limitar cada canal al rango válido <strong>0–255</strong> y actualizar el color del NeoPixel.  </li>
+<li>Comparar el uso de <strong>USB nativo</strong> frente a <strong>UART</strong> para depuración y pruebas.</li>
+</ul>
+<hr />
+<h2 id="3-alcance-y-exclusiones">3) Alcance y Exclusiones</h2>
+<ul>
+<li><strong>Incluye:</strong>  </li>
+<li>Control de <strong>1</strong> LED NeoPixel (<code>NUMPIXELS = 1</code>).  </li>
+<li>Recepción de comandos por <strong>Monitor Serial</strong> (<code>R&lt;r&gt;,G&lt;g&gt;,B&lt;b&gt;</code>).  </li>
+<li>
+<p>Ajuste de <strong>baud rate</strong> y verificación de eco.</p>
+</li>
+<li>
+<p><strong>No incluye:</strong>  </p>
+</li>
+<li>Conexión a sensores externos.  </li>
+<li>Uso de Wi-Fi / Bluetooth.  </li>
+<li>Efectos avanzados o animaciones en tiras LED.</li>
+</ul>
+<hr />
+<h2 id="4-resultados">4) Resultados</h2>
+<ul>
+<li><strong>Recepción de comandos seriales</strong> y aplicación inmediata del color en el NeoPixel.  </li>
+<li><strong>Velocidad usada:</strong> <strong>115200 baudios</strong> (coincidente entre <code>Serial.begin</code> y Monitor Serial).  </li>
+<li><strong>Validación de entrada:</strong> cada canal se restringe con <code>constrain(...)</code> a <strong>0–255</strong>.  </li>
+<li><strong>Ejemplos probados:</strong> <code>R120,G110,B10</code>, <code>R255,G0,B0</code>, <code>R0,G0,B255</code>.</li>
+</ul>
+<hr />
+<h2 id="5-protocolo-de-comandos-y-pruebas">5) Protocolo de comandos y pruebas</h2>
+<ul>
+<li><strong>Formato:</strong> <code>R&lt;r&gt;,G&lt;g&gt;,B&lt;b&gt;</code>  </li>
+<li><strong>Rango:</strong> <code>0–255</code> por canal.  </li>
+<li><strong>Delimitación:</strong> valores separados por <strong>coma</strong> y finalizados con <strong>Enter</strong> (<code>\n</code>).  </li>
+</ul>
+<p><strong>Pruebas sugeridas</strong>
+- <code>R255,G0,B0</code> (rojo)<br />
+- <code>R0,G255,B0</code> (verde)<br />
+- <code>R0,G0,B255</code> (azul)<br />
+- <code>R255,G191,B0</code> (ámbar)<br />
+- <code>R10,G10,B10</code> (atenuado)</p>
+<hr />
+<h2 id="6-codigo-implementado">6) Código Implementado</h2>
+<p>```cpp</p>
+<h1 id="include">include <Adafruit_NeoPixel.h></h1>
+<h1 id="ifdef-avr">ifdef <strong>AVR</strong></h1>
+<p>#include <avr/power.h></p>
+<h1 id="endif">endif</h1>
+<h1 id="define-pin-8">define PIN 8</h1>
+<h1 id="define-numpixels-1">define NUMPIXELS 1</h1>
+<p>Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);</p>
+<p>String cmd = "";
+int r = 0, g = 0, b = 0;</p>
+<p>void setup() {
+  Serial.begin(115200);
+  pixels.begin();
+}</p>
+<p>void loop() {
+  if (Serial.available() &gt; 0) {
+    cmd = Serial.readStringUntil('\n');
+    Serial.println("Msj recibido: " + cmd);</p>
+<div class="language-text highlight"><pre><span></span><code>int pos1 = cmd.indexOf(&#39;,&#39;);      
+int pos2 = cmd.indexOf(&#39;,&#39;, pos1 + 1);
+
+String rPart = cmd.substring(0, pos1);                
+String gPart = cmd.substring(pos1 + 1, pos2);        
+String bPart = cmd.substring(pos2 + 1);
+
+// Extrae el número después de la letra (R/G/B) y limita a 0-255
+r = constrain(rPart.substring(1).toInt(), 0, 255);
+g = constrain(gPart.substring(1).toInt(), 0, 255);
+b = constrain(bPart.substring(1).toInt(), 0, 255);
+
+pixels.clear();
+pixels.setPixelColor(0, pixels.Color(r, g, b));
+pixels.show();
+</code></pre></div>
+<p>}
+}</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.tooltips"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

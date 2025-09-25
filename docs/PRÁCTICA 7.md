@@ -1,4 +1,4 @@
-# 📚 Práctica 6: Control de LEDs con ESP32 mediante Servidor Web
+# 📚 Práctica 7: Control de LEDs con ESP32 mediante Servidor Web
 ---
 
 ## 1) Resumen

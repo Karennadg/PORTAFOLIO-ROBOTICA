@@ -21,8 +21,8 @@
 
 ## 3) Alcance y Exclusiones
 
-- **Incluye:** _Control de tres LEDs independientes a través de rutas específicas en el servidor._
-
+- **Incluye:** 
+-_Control de tres LEDs independientes a través de rutas específicas en el servidor._
 
 -_Prueba del sistema accediendo desde un navegador web en la misma red._
 
@@ -50,9 +50,9 @@ _Esto valida la correcta integración entre la programación del ESP32, el servi
 
 
 
-<img src="recursos/imgs/P4.png" alt="..." width="400px">
+<img src="recursos/imgs/P7.jpg" alt="..." width="400px">
 
-
+<img src="recursos/imgs/P7'.jpg" alt="..." width="400px">
 ---
 
 ## 6) Archivos Adjuntos

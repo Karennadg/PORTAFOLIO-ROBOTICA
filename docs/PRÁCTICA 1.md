@@ -72,3 +72,8 @@ void loop() {
     Serial.print(msg);        // Lo reenvía al monitor
   }
 }
+```
+## 5) Conclusiones
+La práctica permitió comprender y verificar el flujo básico de comunicación serial en el ESP32-C6 usando Arduino IDE. Se implementó un programa de eco que recibió y reenvió caracteres desde el monitor serial, lo que facilitó la validación del canal de datos y el diagnóstico de errores de configuración, como el problema de lectura con caracteres extraños que se resolvió al ajustar el baud rate a 38400. Además, se reforzó la diferenciación de tipos de datos y su papel al manipular información a nivel de firmware, así como la distinción funcional entre el puerto UART y el USB nativo, entendiendo en qué contextos conviene usar cada uno (depuración/interop vs. programación y transferencia directa).
+
+En conjunto, se cumplieron los objetivos propuestos: identificación de tipos de variables, implementación de un receptor de mensajes por serial y análisis de los puertos de comunicación del ESP32-C6. Como trabajo futuro, se sugiere extender el ejemplo para procesar cadenas completas (comandos), confirmar parámetros de temporización según el entorno (OS/driver/IDE) y conectar periféricos que respondan a instrucciones recibidas por serial, consolidando así una base sólida para prácticas posteriores con protocolos más complejos.

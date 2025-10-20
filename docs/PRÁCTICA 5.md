@@ -79,3 +79,21 @@ void loop() {
   // Nada en el loop; el anuncio corre en segundo plano
   delay(1000);
 }
+```
+## 5) Conclusiones
+
+La práctica demostró el uso básico de BLE en el ESP32-C6 configurándolo como beacon publicitario: se inicializó el dispositivo con nombre propio, se creó un servidor GATT con servicio y característica y se inició el advertising incluyendo el UUID del servicio y scan response, lo que permitió descubrir y verificar el dispositivo desde apps móviles (p. ej., nRF Connect / LightBlue). Con ello, se cumplió el objetivo de exponer presencia y metadatos por BLE y confirmar, desde el Monitor Serial y el smartphone, que el anuncio permanece activo en segundo plano.
+
+Como mejoras futuras se sugiere:
+
+Ajustar parámetros de advertising (intervalo, potencia TX) para balancear alcance vs. consumo y observar el impacto en RSSI.
+
+Agregar datos en el payload (Manufacturer Data o Service Data) o adoptar formatos estándar como iBeacon/Eddystone cuando aplique.
+
+Gestionar estados: detener/relanzar advertising al conectar, y agregar callbacks del servidor para eventos (onConnect/onDisconnect).
+
+Seguridad y privacidad: habilitar MAC aleatoria, definir propiedades/permiso de la característica (read/write/notify) y, si procede, emparejamiento.
+
+Escalabilidad: múltiples características/servicios y notificaciones (notify/indicate) para aplicaciones interactivas más allá del simple anuncio.
+
+Estas extensiones convertirán el beacon básico en una base sólida para soluciones IoT que requieran descubrimiento confiable, telemetría ligera o interacción GATT con clientes móviles.

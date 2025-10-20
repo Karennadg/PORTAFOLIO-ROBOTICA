@@ -86,14 +86,10 @@ La práctica demostró el uso básico de BLE en el ESP32-C6 configurándolo como
 
 Como mejoras futuras se sugiere:
 
-Ajustar parámetros de advertising (intervalo, potencia TX) para balancear alcance vs. consumo y observar el impacto en RSSI.
+Como mejoras futuras se sugiere:
 
-Agregar datos en el payload (Manufacturer Data o Service Data) o adoptar formatos estándar como iBeacon/Eddystone cuando aplique.
-
-Gestionar estados: detener/relanzar advertising al conectar, y agregar callbacks del servidor para eventos (onConnect/onDisconnect).
-
-Seguridad y privacidad: habilitar MAC aleatoria, definir propiedades/permiso de la característica (read/write/notify) y, si procede, emparejamiento.
-
-Escalabilidad: múltiples características/servicios y notificaciones (notify/indicate) para aplicaciones interactivas más allá del simple anuncio.
-
-Estas extensiones convertirán el beacon básico en una base sólida para soluciones IoT que requieran descubrimiento confiable, telemetría ligera o interacción GATT con clientes móviles.
+- Ajustar parámetros de advertising (intervalo, potencia TX) para balancear alcance vs. consumo y observar el impacto en RSSI.
+- Agregar datos en el payload (Manufacturer Data o Service Data) o adoptar formatos estándar como iBeacon/Eddystone cuando aplique.
+- Gestionar estados: detener/relanzar advertising al conectar, y agregar callbacks del servidor para eventos (onConnect/onDisconnect).
+- Seguridad y privacidad: habilitar MAC aleatoria, definir propiedades/permiso de la característica (read/write/notify) y, si procede, emparejamiento.
+- Escalabilidad: múltiples características/servicios y notificaciones (notify/indicate) para aplicaciones interactivas más allá del simple anuncio.

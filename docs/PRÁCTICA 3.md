@@ -67,7 +67,7 @@
 
 ## 6) Código Implementado
 
-```cpp
+```
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
   #include <avr/power.h>
@@ -108,4 +108,17 @@ void loop() {
     pixels.show();
   }
 }
+```
+## 7) Conclusiones
 
+La práctica consolidó el control determinista de un NeoPixel vía comandos seriales R,G,B en el ESP32-C6. Se validó el parseo de texto con separación por comas y el mapeo de cada canal a su rango permitido (0–255), reflejándose de inmediato en el LED mediante Adafruit_NeoPixel. La sincronía de baudios (115200) entre Serial.begin y el Monitor Serial evitó errores de lectura, y la comparación entre USB nativo y UART aclaró escenarios de uso (programación/depuración directa vs. interoperabilidad con otros dispositivos). En suma, se cumplieron los objetivos: configuración del puerto, interpretación de comandos, limitación de rango y actualización correcta del color.
+
+Como mejora futura, se recomienda:
+
+Robustecer el protocolo: tolerar espacios y minúsculas, manejar \r\n, validar formato (faltas de coma o letras) y enviar ACK/ERROR al host.
+
+Experiencia visual: agregar brillo global y corrección gamma, y extender a más píxeles/animaciones manteniendo tiempos no bloqueantes.
+
+Fiabilidad eléctrica: asegurar alimentación estable del LED (condensador de 100–1000 µF en 5 V) y cuidar la compatibilidad de niveles de datos (3.3 V suele funcionar, pero considerar un level shifter en tiras largas).
+
+Estas extensiones convertirán el ejercicio en una base sólida para protocolos más ricos (p. ej., comandos con brillo, efectos o múltiples LEDs) y para integrar periféricos que reaccionen a instrucciones seriales en tiempo real.

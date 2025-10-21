@@ -50,9 +50,9 @@ _Esto valida la correcta integración entre la programación del ESP32, el servi
 
 
 
-<img src="recursos/imgs/P7.jpg" alt="..." width="400px">
+<img src="../recursos/imgs/P7.jpg" alt="..." width="400px">
 
-<img src="recursos/imgs/P7'.jpg" alt="..." width="400px">
+<img src="../recursos/imgs/P7'.jpg" alt="..." width="400px">
 ---
 
 ## 6) Archivos Adjuntos

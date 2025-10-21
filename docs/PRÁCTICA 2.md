@@ -47,7 +47,7 @@ _El retardo de un segundo facilitó la observación de cada cambio de color ante
 
 
 
-<img src="recursos/imgs/P2.png" alt="..." width="400px">
+<img src="../recursos/imgs/P2.png" alt="..." width="400px">
 
 
 _En general, el comportamiento del LED fue estable, sin presentar fallos de comunicación ni bloqueos durante las pruebas, lo cual confirma la correcta implementación de la librería y de la lógica de control._

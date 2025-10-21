@@ -26,13 +26,13 @@
 
 -_Control de un LED (ON/OFF) mediante un botón en la misma página._
 
--_Recepción de texto desde una caja de entrada y su impresión en el monitor serial.._
+-_Recepción de texto desde una caja de entrada y su impresión en el monitor serial._
 
 -_No se implementa autenticación ni seguridad en el servidor web._
 
--_No se utilizan librerías externas de servidores avanzados, únicamente la librería nativa WebServer.h._
+-_No se utilizan librerías externas avanzadas, únicamente WiFi.h y WebServer.h.._
 
--_El control se limita a encendido y apagado, sin regulación de intensidad (PWM)._
+-_No se contempla la regulación analógica directa del LED controlado por botón (solo ON/OFF)_
 
 ---
 
@@ -41,23 +41,20 @@ _Al subir el programa al ESP32 y conectarlo a la red WiFi, el monitor serial mue
 
 _La página principal permite controlar un LED mediante un botón que cambia dinámicamente su estado de “ON” a “OFF”. Para los otros dos LEDs, se accede a través de rutas específicas (/on1, /off1, /on2, /off2) en la URL, lo cual permite verificar el funcionamiento del servidor al interpretar diferentes solicitudes HTTP._
 
-_El funcionamiento observado fue el siguiente:_
-_Al presionar el botón en la página, el LED conectado al pin 20 cambia entre encendido y apagado._
-_Al introducir manualmente la ruta /on1 o /off1, el LED en el pin 19 responde correctamente._
-_De igual manera, con las rutas /on2 y /off2 se controla el LED del pin 21_
-_Esto valida la correcta integración entre la programación del ESP32, el servidor web y el hardware físico._
+_El botón HTML permite encender o apagar un LED (pin LED_BUILTIN) de forma remota, con cambios dinámicos en el texto del botón y estado del LED._
 
+_Los sliders permiten modificar valores de 0 a 180, los cuales son mapeados a un rango de señal PWM (205 a 410). Esto se refleja en la intensidad de salida en los pines definidos por #define pwm 3 y #define pwm1 2, ideal para el control de brillo de LEDs o velocidad de servomotores._
 
+_Al escribir en la caja de texto y presionar “Enviar”, el valor se muestra en el monitor serial como confirmación de recepción._
 
+_Todas las acciones generan peticiones HTTP (GET) que el servidor del ESP32 interpreta correctamente, generando una respuesta inmediata y modificando salidas físicas._
 
-<img src="recursos/imgs/P7.jpg" alt="..." width="400px">
-
-<img src="recursos/imgs/P7'.jpg" alt="..." width="400px">
 ---
 
 ## 6) Archivos Adjuntos
 
-```CPP
+``` cpp
+
 #include <WiFi.h>
 #include <WebServer.h>
 
@@ -199,10 +196,9 @@ void setup() {
   servidor.on("/slider", handleSlider);
   servidor.on("/slider1", handleSlider1);
   servidor.on("/textbox", handle
-
-
 ```
 
 ## 5) Conclusión
-_La práctica permitió comprobar que el ESP32 puede actuar como un servidor web capaz de controlar periféricos en tiempo real. A través de una interfaz sencilla en HTML, se logró el encendido y apagado de LEDs de forma remota desde cualquier dispositivo conectado a la misma red._
-_Este ejercicio constituye un ejemplo básico de aplicaciones IoT, donde los microcontroladores conectados a internet permiten interactuar con el entorno físico. Los conocimientos adquiridos son fundamentales para proyectos más complejos como automatización del hogar, control de maquinaria industrial o monitoreo de sistemas._
+_La práctica permitió comprobar que el ESP32 puede actuar como un servidor web funcional que permite controlar periféricos en tiempo real desde una interfaz gráfica. El sistema implementado constituye una base sólida para aplicaciones más complejas del Internet de las Cosas (IoT), como domótica, monitoreo remoto o automatización industrial._
+
+_La integración entre HTML, JavaScript y el servidor embebido del ESP32 permite la creación de interfaces intuitivas que facilitan la interacción hombre-máquina sin necesidad de aplicaciones externas. Además, el manejo de señales PWM desde el navegador extiende la utilidad del sistema para control preciso de actuadores. Se concluye que el ESP32 es una herramienta poderosa, flexible y accesible para el desarrollo de sistemas embebidos conectados a red.._

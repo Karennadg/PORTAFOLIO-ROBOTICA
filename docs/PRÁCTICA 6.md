@@ -1,4 +1,4 @@
-# 📚 Práctica 5: ESP32-C6 como Beacon (BLE Advertising)
+# 📚 Práctica 6: ESP32-C6 como Beacon (BLE Advertising)
 
 ---
 

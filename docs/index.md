@@ -28,6 +28,6 @@ Resumen:
 
 Soy ingeniero mecatrónico con interés en la electrónica, el diseño CAD y el desarrollo de soluciones tecnológicas. Me apasiona el diseño y la innovación, aplicando mis conocimientos para crear proyectos eficientes y funcionales en distintas áreas de la ingeniería.
 
-<img src="recursos/imgs/foto tom.jpg" alt="..." width="100px">
+<img src="recursos/imgs/foto ingearith.jpg" alt="..." width="100px">
 ---
 

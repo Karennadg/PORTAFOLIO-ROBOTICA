@@ -1,6 +1,6 @@
 # Documentación Elementos Programables II
 
-##Nuestro Portafolio de Actividades
+##Portafolio de Actividades
 Introducción a la mecátronica
 Departamento de Ciencias e Ingenierías | Universidad Iberoamericana Puebla, México.
 
@@ -19,15 +19,5 @@ Soy estudiante de décimo semestre de Ingeniería Mecatrónica, con formación p
 <img src="../recursos/imgs/karen.jpg" alt="..." width="100px">
 
 ---
-Arith Maldonado Zamudio
 
-Ingeniería meátronica | [arith.maldonado@iberopuebla.mx](arith.maldonado@iberopuebla.mx)
-
-
-Resumen:
-
-Soy ingeniero mecatrónico con interés en la electrónica, el diseño CAD y el desarrollo de soluciones tecnológicas. Me apasiona el diseño y la innovación, aplicando mis conocimientos para crear proyectos eficientes y funcionales en distintas áreas de la ingeniería.
-
-<img src="../recursos/imgs/foto ingearith.png" alt="..." width="100px">
----
 

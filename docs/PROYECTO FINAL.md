@@ -48,6 +48,9 @@ _Los parámetros PD (`Kp`, `Kd`), el suavizado EMA, `MAX_STEP` y `MAX_ACCEL` per
 
 _Durante las pruebas del sistema, la cámara logró detectar de manera efectiva la posición de la pelota en la imagen y generar un error en los ejes X y Y comparándolo con el centro teórico. El nodo de visión calculó las acciones de control PD y las envió al ESP32 como comandos de corrección o como ángulos finales, dependiendo del modo de operación. El ESP32 ejecutó estos movimientos de forma estable gracias al rampado, que evitó cambios de posición bruscos y mantuvo el movimiento continuo sin sacudidas. La plataforma pudo responder correctamente a los desplazamientos de la pelota, inclinándose de manera proporcional y derivativa para regresar la pelota al centro. El segundo modo de control, basado en la mano del usuario, también mostró un funcionamiento adecuado y permitió mover la plataforma con libertad mientras se visualizaban las líneas guía en pantalla. Durante las pruebas se comprobó que los ajustes de Kp y Kd afectan significativamente el comportamiento: valores altos causan oscilaciones intensas y movimientos excesivamente rápidos, mientras que valores moderados permiten un equilibrio entre estabilidad y capacidad de reacción. El sistema demostró ser funcional bajo ambos modos de visión, cumpliendo con los objetivos planteados._
 
+[Video control mano](https://youtu.be/zepItAOh-Lk)
+[Video control PD](https://youtu.be/MQ0QVBZc3m0)
+
 ---
 
 ## 5) Archivos Adjuntos / Código

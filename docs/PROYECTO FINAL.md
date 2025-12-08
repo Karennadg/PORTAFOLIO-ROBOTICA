@@ -1,204 +1,251 @@
-# 📚 Práctica 8: Control de LEDs con ESP32 mediante Servidor Web Interactivo
+# Proyecto: Plataforma de Balanceo Activo para Mantener una Pelota Centrada
 ---
 
 ## 1) Resumen
 
-- **Equipo / Autor(es):**  _Karen Najera y Arith Maldonado_
-- **Curso / Asignatura:** _Elementos programables II_  
-- **Fecha:** _29/09/2025_  
-- **Descripción breve:** _En esta práctica se configuró un ESP32 como servidor web para controlar dos LEDs mediante sliders (control PWM) y uno adicional a través de un botón de encendido/apagado en una interfaz web. También se incorporó una caja de texto para enviar datos al ESP32 desde la misma página. Todo esto permite simular una interfaz de control básica para un sistema embebido conectado a red, sentando las bases para aplicaciones IoT._
-
+- **Equipo / Autor(es):**  _Karen Nájera_  
+- **Curso / Asignatura:** _Elementos Programables / Proyecto de Control_  
+- **Fecha:** _05/12/2025_  
+- **Descripción breve:**  
+  _Este proyecto implementa una plataforma inclinable controlada por 3 servomotores (2 para eje X: izquierdo/derecho y 1 para eje Y: arriba/abajo) cuyo objetivo es mantener una pelota ligera en el centro. Se desarrollaron dos métodos de visión, uno basado en detección por color para ubicar una pelota y otro basado en detección de líneas para controlar la plataforma con la mano.
+Además, se integró un controlador PD que recibe la posición detectada por la cámara y envía comandos al ESP32 mediante Bluetooth. El ESP32 ejecuta el movimiento con rampado, límites y retorno automático a posición neutral._
 
 ---
 
 ## 2) Objetivos
 
-- **General:** _Comprender e implementar un servidor web sobre el ESP32 que permita el control interactivo de periféricos en tiempo real a través de una interfaz web._
-- **Específicos:**
-  - _Configurar una página HTML embebida que incluya controles interactivos como sliders, botones y cajas de texto._
-  - _Implementar funciones en el servidor web para recibir valores y aplicarlos al hardware físico (pines PWM y digitales)._
-  - _Utilizar funciones de mapeo PWM para controlar brillo o velocidad de motores._
+- **General:**  
+  _Implementar y validar un sistema embebido que, combinando visión por computadora y control PD, mantenga una pelota centrada sobre una plataforma inclinable y también permita un segundo modo de control mediante gestos de la mano._
+
+- **Específicos:**  
+  - _Diseñar la plataforma y la distribución de servos (2 en X, 1 en Y)._  
+  - _Implementar el nodo de visión que detecte la pelota y calcule acciones PD._  
+  - _Implementar firmware en ESP32 que reciba comandos por Bluetooth y mueva los servos de forma segura (rampa y límites)._  
+  - _Probar y ajustar ganancias PD para lograr compromiso entre rapidez y suavidad._
+
+---
 
 ## 3) Alcance y Exclusiones
 
-- **Incluye:** 
--_Control de dos salidas PWM mediante sliders en una interfaz web._
+- **Incluye:**  
+  - _Detección de pelota por color con OpenCV (Python)._  
+  - _Cálculo de control PD en el nodo de visión (Python)._  
+  - _Comunicación Bluetooth entre PC (visión) y ESP32._  
+  - _Firmware ESP32 que aplica comandos a 3 servos con límite, rampa y timeout de seguridad._
 
--_Control de un LED (ON/OFF) mediante un botón en la misma página._
-
--_Recepción de texto desde una caja de entrada y su impresión en el monitor serial._
-
--_No se implementa autenticación ni seguridad en el servidor web._
-
--_No se utilizan librerías externas avanzadas, únicamente WiFi.h y WebServer.h.._
-
--_No se contempla la regulación analógica directa del LED controlado por botón (solo ON/OFF)_
+- **Exclusiones / restricciones:**  
+  - _No se implementa realimentación de posición (no hay encoders)._  
+  - _No se implementa autenticación/TLS en la comunicación._  
+  - _El sistema asume condiciones de iluminación y contraste adecuadas para la detección por color._
 
 ---
 
 ## 4) Resultados
-_Al subir el programa al ESP32 y conectarlo a la red WiFi, el monitor serial muestra la dirección IP local asignada. Esta dirección es introducida en un navegador dentro de la misma red para abrir la interfaz web.
 
-_La página principal permite controlar un LED mediante un botón que cambia dinámicamente su estado de “ON” a “OFF”. Para los otros dos LEDs, se accede a través de rutas específicas (/on1, /off1, /on2, /off2) en la URL, lo cual permite verificar el funcionamiento del servidor al interpretar diferentes solicitudes HTTP._
+_Al ejecutar el sistema: la cámara detecta la pelota y el nodo de visión calcula el error en pixeles respecto al centro de la imagen (X, Y). El controlador PD calcula correcciones y envía comandos `DX` y `DY` por Bluetooth al ESP32 (o bien puede enviar directamente ángulos `AX,AY,AZ`). El ESP32 aplica esos comandos a los servos con rampado, límites de ángulo y timeout de seguridad; si no recibe comandos vuelve a la posición neutral._
 
-_El botón HTML permite encender o apagar un LED (pin LED_BUILTIN) de forma remota, con cambios dinámicos en el texto del botón y estado del LED._
+_Los parámetros PD (`Kp`, `Kd`), el suavizado EMA, `MAX_STEP` y `MAX_ACCEL` permiten ajustar el compromiso entre rapidez y suavidad. Para pelotas muy ligeras las ganancias altas producen movimientos bruscos que lanzan la pelota; por eso recomendamos limitar el paso y usar rampa._
 
-_Los sliders permiten modificar valores de 0 a 180, los cuales son mapeados a un rango de señal PWM (205 a 410). Esto se refleja en la intensidad de salida en los pines definidos por #define pwm 3 y #define pwm1 2, ideal para el control de brillo de LEDs o velocidad de servomotores._
-
-_Al escribir en la caja de texto y presionar “Enviar”, el valor se muestra en el monitor serial como confirmación de recepción._
-
-_Todas las acciones generan peticiones HTTP (GET) que el servidor del ESP32 interpreta correctamente, generando una respuesta inmediata y modificando salidas físicas._
+_Durante las pruebas del sistema, la cámara logró detectar de manera efectiva la posición de la pelota en la imagen y generar un error en los ejes X y Y comparándolo con el centro teórico. El nodo de visión calculó las acciones de control PD y las envió al ESP32 como comandos de corrección o como ángulos finales, dependiendo del modo de operación. El ESP32 ejecutó estos movimientos de forma estable gracias al rampado, que evitó cambios de posición bruscos y mantuvo el movimiento continuo sin sacudidas. La plataforma pudo responder correctamente a los desplazamientos de la pelota, inclinándose de manera proporcional y derivativa para regresar la pelota al centro. El segundo modo de control, basado en la mano del usuario, también mostró un funcionamiento adecuado y permitió mover la plataforma con libertad mientras se visualizaban las líneas guía en pantalla. Durante las pruebas se comprobó que los ajustes de Kp y Kd afectan significativamente el comportamiento: valores altos causan oscilaciones intensas y movimientos excesivamente rápidos, mientras que valores moderados permiten un equilibrio entre estabilidad y capacidad de reacción. El sistema demostró ser funcional bajo ambos modos de visión, cumpliendo con los objetivos planteados._
 
 ---
 
-## 6) Archivos Adjuntos
+## 5) Archivos Adjuntos / Código
 
-``` cpp
+_En este apartado se integrarán los archivos correspondientes al firmware del ESP32 y a los dos scripts de visión. Se incluirá un archivo destinado al control autónomo mediante detección de la pelota y otro para el modo controlado por la mano del usuario. También se agregarán las imágenes y diagramas asociados al montaje físico de la plataforma y a las pruebas realizadas._
 
-#include <WiFi.h>
-#include <WebServer.h>
+- ****  
 
-#define pwm 3
-#define pwm1 2
-
-const char* ssid = "iPhone";
-const char* password = "karennajera";
-
-WebServer servidor(80);
-
-const int ledPin = LED_BUILTIN;
-String ledState = "OFF";
-int sliderValue = 0;
-int sliderValue1 = 0;
-
-const char htmlTemplate[] PROGMEM = R"rawliteral(
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Control de LED ESP32</title>
-  </head>
-  <body>
-    <h1>Control de LED ESP32</h1>
-    <p>El LED está %LED_STATE%</p>
-    <a href="/%LINK%"><button>%BUTTON_TEXT%</button></a>
-    <br><br>
-    <h2>Control del Slider</h2>
-    <input type="range" min="0" max="180" value="%SLIDER_VALUE%" id="slider" oninput="updateSlider(this.value)">
-    <span id="sliderValue">%SLIDER_VALUE%</span>
-    <br><br>
-    <h2>Segundo Slider</h2>
-    <input type="range" min="0" max="180" value="%SLIDER_VALUE1%" id="slider1" oninput="updateSlider1(this.value)">
-    <span id="sliderValue1">%SLIDER_VALUE1%</span>
-    <br><br>
-    <h2>Ingresar Texto</h2>
-    <input type="text" id="txtInput" placeholder="Escribe algo...">
-    <button onclick="sendText()">Enviar</button>
-
-    <script>
-      function updateSlider(value) {
-        document.getElementById('sliderValue').innerText = value;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/slider?value=" + encodeURIComponent(value), true);
-        xhr.send();
-      }
-      function updateSlider1(value) {
-        document.getElementById('sliderValue1').innerText = value;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/slider1?value=" + encodeURIComponent(value), true);
-        xhr.send();
-      }
-      function sendText() {
-        var textValue = document.getElementById('txtInput').value;
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/textbox?value=" + encodeURIComponent(textValue), true);
-        xhr.send();
-      }
-    </script>
-  </body>
-</html>
-)rawliteral;
-
-void handleroot() {
-  String html = String(htmlTemplate);
-  html.replace("%LED_STATE%", ledState);
-  html.replace("%SLIDER_VALUE%", String(sliderValue));
-  html.replace("%SLIDER_VALUE1%", String(sliderValue1));
-  if (ledState == "OFF") {
-    html.replace("%LINK%", "ON");
-    html.replace("%BUTTON_TEXT%", "Encender");
-  } else {
-    html.replace("%LINK%", "OFF");
-    html.replace("%BUTTON_TEXT%", "Apagar");
-  }
-  servidor.send(200, "text/html", html);
+```cpp
+#include <Arduino.h>
+#include "BluetoothSerial.h"
+ 
+BluetoothSerial SerialBT;
+ 
+// === Buffer para lectura BT no bloqueante ===
+String btBuffer;
+ 
+// === Pines de los servos ===
+#define SERVO_IZQ   25
+#define SERVO_DER   15
+#define SERVO_VERT  33
+ 
+// === PWM ===
+const uint32_t FREQ_HZ = 50;
+const uint8_t  RES_BITS = 12;
+const uint16_t DUTY_MIN = 205;   // ~1.0 ms
+const uint16_t DUTY_MAX = 410;   // ~2.0 ms
+ 
+// Convierte grados físicos 0..180 a duty
+uint16_t dutyFromDeg(int deg){
+  deg = constrain(deg,0,180);
+  return map(deg,0,180,DUTY_MIN,DUTY_MAX);
 }
-
-void handleOn() {
-  digitalWrite(ledPin, HIGH);
-  ledState = "ON";
-  handleroot();
+ 
+// Convierte de ángulo lógico (0..180, centro 90) a físico (invertido)
+int logicalToPhysical(int logicalDeg){
+  logicalDeg = constrain(logicalDeg, 0, 180);
+  // 0 lógico → 180 físico, 180 lógico → 0 físico
+  return 180 - logicalDeg;
 }
-
-void handleOff() {
-  digitalWrite(ledPin, LOW);
-  ledState = "OFF";
-  handleroot();
+ 
+// Escribe usando grados lógicos
+void writeServoLogical(int pin, int logicalDeg){
+  int fisico = logicalToPhysical(logicalDeg);
+  ledcWrite(pin, dutyFromDeg(fisico));
 }
-
-void handleSlider() {
-  if (servidor.hasArg("value")) {
-    sliderValue = servidor.arg("value").toInt();
-    Serial.println("Valor del slider: " + String(sliderValue));
-    int duty = map(sliderValue, 0, 180, 205, 410);
-    ledcWrite(pwm, duty);
-  }
-  servidor.send(200, "text/plain", "OK");
+ 
+// Configurar servo con ángulo lógico inicial
+void configServo(int pin, int initialLogical){
+  pinMode(pin,OUTPUT);
+  ledcAttach(pin,FREQ_HZ,RES_BITS);   // usa el pin como canal
+  writeServoLogical(pin,initialLogical);
 }
-
-void handleSlider1() {
-  if (servidor.hasArg("value")) {
-    sliderValue1 = servidor.arg("value").toInt();
-    Serial.println("Valor del segundo slider: " + String(sliderValue1));
-    int duty1 = map(sliderValue1, 0, 180, 205, 410);
-    ledcWrite(pwm1, duty1);
-  }
-  servidor.send(200, "text/plain", "OK");
+ 
+// === Rango y rampa ===
+const int LIM_MIN = 0;
+const int LIM_MAX = 180;
+const int PASO_RAMPA = 45;          // tamaño de paso en rampa
+const uint32_t DT_RAMP_MS = 2;
+const uint32_t TIMEOUT_MS = 700;
+ 
+// Estado en grados LÓGICOS
+int posIzq = 90;
+int posDer = 90;
+int posVert= 60;
+ 
+int tgtIzq = 90;
+int tgtDer = 90;
+int tgtVert= 60;
+ 
+uint32_t tPrevRamp = 0;
+uint32_t tLastCmd  = 0;
+ 
+// Rampa suave hacia el objetivo
+void aplicarRampa(){
+  uint32_t now = millis();
+  if(now - tPrevRamp < DT_RAMP_MS) return;
+  tPrevRamp = now;
+ 
+  auto go = [&](int actual,int target){
+    if(actual < target) return min(actual + PASO_RAMPA, target);
+    if(actual > target) return max(actual - PASO_RAMPA, target);
+    return actual;
+  };
+ 
+  posIzq = go(posIzq, tgtIzq);
+  posDer = go(posDer, tgtDer);
+  posVert= go(posVert,tgtVert);
+ 
+  // Escribimos usando grados LÓGICOS, se invierten adentro
+  writeServoLogical(SERVO_IZQ, posIzq);
+  writeServoLogical(SERVO_DER, posDer);
+  writeServoLogical(SERVO_VERT,posVert);
 }
-
-void handleTextbox() {
-  if (servidor.hasArg("value")) {
-    String textValue = servidor.arg("value");
-    Serial.println("Texto recibido: " + textValue);
-  }
-  servidor.send(200, "text/plain", "OK");
+ 
+// Parsea "ANG:izq,der,vert"
+bool parseAngulos(const String &msg, int &aIzq, int &aDer, int &aVert){
+  if (!msg.startsWith("ANG:")) return false;
+  String data = msg.substring(4);  // después de "ANG:"
+ 
+  int c1 = data.indexOf(',');
+  if (c1 < 0) return false;
+  int c2 = data.indexOf(',', c1 + 1);
+  if (c2 < 0) return false;
+ 
+  String sIzq  = data.substring(0, c1);
+  String sDer  = data.substring(c1 + 1, c2);
+  String sVert = data.substring(c2 + 1);
+ 
+  sIzq.trim();
+  sDer.trim();
+  sVert.trim();
+ 
+  aIzq  = sIzq.toInt();
+  aDer  = sDer.toInt();
+  aVert = sVert.toInt();
+ 
+  return true;
 }
-
-void setup() {
+ 
+// ======== SETUP ========
+void setup(){
   Serial.begin(115200);
-  pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, LOW);
-  ledcAttachChannel(pwm, 50, 12, 0);
-  ledcAttachChannel(pwm1, 50, 12, 1);
-
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  SerialBT.begin("ESP32-BallPlatform");
+ 
+  configServo(SERVO_IZQ, posIzq);
+  configServo(SERVO_DER, posDer);
+  configServo(SERVO_VERT,posVert);
+ 
+  Serial.println("ESP32 listo");
+  tLastCmd = millis();
+}
+ 
+// ======== LOOP ========
+void loop(){
+ 
+  // --- Lectura Bluetooth no bloqueante ---
+  while (SerialBT.available()) {
+    char c = (char)SerialBT.read();
+ 
+    if (c == '\n') {
+      // Tenemos una línea completa en btBuffer
+      String msg = btBuffer;
+      btBuffer = "";        // limpiar para el siguiente mensaje
+ 
+      msg.trim();
+      if (msg.length() > 0) {
+        tLastCmd = millis();
+ 
+        if (msg == "LOST") {
+          // PC perdió mano/objetivo → "centro"
+          tgtIzq  = 90;
+          tgtDer  = 90;
+          tgtVert = 60;
+          Serial.println("Comando LOST: centro.");
+ 
+        } else if (msg == "ZERO") {
+          // 🔹 TODOS los servos a 180 físicos
+          //    ⇒ 0 lógico por el mapeo invertido
+          tgtIzq  = 0;
+          tgtDer  = 0;
+          tgtVert = 0;
+          Serial.println("Comando ZERO: servos → 180° fisico");
+ 
+        } else {
+          int aIzq, aDer, aVert;
+          if (parseAngulos(msg, aIzq, aDer, aVert)) {
+            tgtIzq  = constrain(aIzq,  LIM_MIN, LIM_MAX);
+            tgtDer  = constrain(aDer,  LIM_MIN, LIM_MAX);
+            tgtVert = constrain(aVert, LIM_MIN, LIM_MAX);
+            Serial.printf("ANG -> IZQ:%d DER:%d VERT:%d\n", tgtIzq, tgtDer, tgtVert);
+          } else {
+            Serial.print("Comando desconocido: ");
+            Serial.println(msg);
+          }
+        }
+      }
+    } else if (c != '\r') {
+      // Acumulamos caracteres, ignorando CR
+      btBuffer += c;
+    }
   }
+ 
+  // Si pasa mucho tiempo sin recibir comandos, vuelve al centro
+  if(millis() - tLastCmd > TIMEOUT_MS){
+    tgtIzq = 90;
+    tgtDer = 90;
+    tgtVert= 60;
+  }
+ 
+  aplicarRampa();
+  delay(1);
+}
+ 
 
-  Serial.println("\nWiFi conectado");
-  Serial.println(WiFi.localIP());
-
-  servidor.on("/", handleroot);
-  servidor.on("/ON", handleOn);
-  servidor.on("/OFF", handleOff);
-  servidor.on("/slider", handleSlider);
-  servidor.on("/slider1", handleSlider1);
-  servidor.on("/textbox", handle
 ```
 
-## 5) Conclusión
-_La práctica permitió comprobar que el ESP32 puede actuar como un servidor web funcional que permite controlar periféricos en tiempo real desde una interfaz gráfica. El sistema implementado constituye una base sólida para aplicaciones más complejas del Internet de las Cosas (IoT), como domótica, monitoreo remoto o automatización industrial._
 
-_La integración entre HTML, JavaScript y el servidor embebido del ESP32 permite la creación de interfaces intuitivas que facilitan la interacción hombre-máquina sin necesidad de aplicaciones externas. Además, el manejo de señales PWM desde el navegador extiende la utilidad del sistema para control preciso de actuadores. Se concluye que el ESP32 es una herramienta poderosa, flexible y accesible para el desarrollo de sistemas embebidos conectados a red.._
+## 6) Conclusión
+
+_El proyecto permitió comprobar que la combinación de visión por computadora, control PD y servomotores puede implementarse de manera efectiva para mantener una pelota centrada sobre una plataforma inclinable. La separación en dos modos de operación —detección automática por filtros de color y control manual mediante el seguimiento de la mano— permitió validar tanto la capacidad del sistema para operar en lazo cerrado como su respuesta a órdenes directas. La integración entre Python y el ESP32 funcionó de forma estable y permitió el envío continuo de datos para corregir la posición en tiempo real. Se concluye que la plataforma es una base sólida para futuras implementaciones más complejas, como controles PID completos, superficies móviles de mayor tamaño, o incluso sistemas de estabilización aplicados a robótica móvil._

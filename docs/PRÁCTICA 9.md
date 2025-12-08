@@ -1,4 +1,4 @@
-# 🛰️ Práctica 9 (P9): Comunicación ESP-NOW con 3 botones y 3 LEDs
+# Práctica 9 (P9): Comunicación ESP-NOW con 3 botones y 3 LEDs
 
 ---
 

@@ -1,4 +1,4 @@
-# Proyecto: Filtrado y Limpieza de Imagen para Detección de Monedas mediante Operaciones Morfológicas
+# Práctica 10: Filtrado y Limpieza de Imagen para Detección de Monedas mediante Operaciones Morfológicas
 ---
 
 ## 1) Resumen

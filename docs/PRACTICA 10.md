@@ -1,4 +1,4 @@
-# Proyecto: Plataforma de Balanceo Activo para Mantener una Pelota Centrada
+# Proyecto: Filtrado y Limpieza de Imagen para Detección de Monedas mediante Operaciones Morfológicas
 ---
 
 ## 1) Resumen
